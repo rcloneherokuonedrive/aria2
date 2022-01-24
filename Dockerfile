@@ -1,9 +1,9 @@
-FROM node:lts-buster
+FROM node:lts-alpine
 
 WORKDIR /app
 COPY package.json .
-COPY setup.sh .
-RUN bash setup.sh
+COPY initial.sh .
+RUN bash initial.sh
 COPY yarn.lock .
 RUN yarn
 COPY . .
