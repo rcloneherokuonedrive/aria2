@@ -1,20 +1,29 @@
 const http = require('http')
+
 const httpProxy = require('http-proxy')
+
 const express = require('express')
+
 const request = require('request')
+
 const httpsrv = require('httpsrv')
+
 const fs = require('fs')
+
 const SECRET = /rpc-secret=(.*)/.exec(
 	fs.readFileSync('aria2c.conf', 'utf-8')
 )[1]
 const ENCODED_SECRET = Buffer.from(SECRET).toString('base64')
 
 const PORT = process.env.PORT || 1234
+
 const app = express()
+
 const proxy = httpProxy.createProxyServer({
 	target: 'ws://127.0.0.1:6800',
 	ws: true
 })
+
 const server = http.createServer(app)
 
 // Proxy websocket
@@ -33,12 +42,13 @@ app.use(
 	})
 )
 app.use('/ariang', express.static(__dirname + '/ariang'))
+
 app.get('/', (req, res) => {
 	res.send(`
-<label for="secret">Enter your aria2 secret:</label>
+<label for="secret">Enter your aria2 secret :</label>
 <input id="secret" type="password">
 <button id="panel">Go to AriaNg panel</button>
-<button id="downloads">View downloaded files</button>
+<button id="downloads">View all downloaded files</button>
 <script>
 panel.onclick=function(){
 	open('/ariang/#!/settings/rpc/set/wss/'+location.hostname+'/443/jsonrpc/'+btoa(secret.value),'_blank')
